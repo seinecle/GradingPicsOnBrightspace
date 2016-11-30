@@ -8,7 +8,7 @@
 
 ###Grading from the Brightspace website is too slow because:
 - pics take some time to load  
-- some pics can be seen directly in preview (jpeg format), but others need to be clicked on to be opened (png format)
+- some pics can be seen directly in preview (jpeg format), but others need to be clicked on to be opened (png format).
 This is enough to make grading for a very large number of students, for several assignments, a nightmare.
 
 ###Solution:  
@@ -18,7 +18,7 @@ This is enough to make grading for a very large number of students, for several 
 - When done with all the pics, I will just upload the grades of the Excel file on Brightspace.
 
 ###Technical aspects of the solution:
-- I will take this opportunity to develop a JavaFX app for Windows an Mac.
+- I will take this opportunity to develop a JavaFX app for Windows and Mac.
 - I should add a connection to the api of Brightspace to skip the manual download and upload, that's planned.
 
 Feedback and questions? levallois@em-lyon.com
