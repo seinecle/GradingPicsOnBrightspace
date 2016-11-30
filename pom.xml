@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>net.clementlevallois.MainApp</mainClass>
+        <poi.version>3.15</poi.version>
     </properties>
 
     <organization>
@@ -26,7 +27,17 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -137,7 +148,7 @@
                     </execution>
                 </executions>
             </plugin>-->
-<!--            <plugin>
+            <!--            <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.6.0</version>

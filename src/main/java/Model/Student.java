@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.Objects;
+
 /**
  *
  * @author LEVALLOIS
@@ -20,5 +22,32 @@ public class Student {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.fullName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Student other = (Student) obj;
+        if (!Objects.equals(this.fullName, other.fullName)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 
 }

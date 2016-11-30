@@ -12,8 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -36,8 +39,8 @@ public class PictureLoader {
             String folderName = folder.getFileName().toString();
             //checking for a series of petty conditions
             if (!folderName.equals("index.html") & !folderName.equals(directoryAssignments.getFileName().toString()) & folder.toFile().isDirectory()) {
-                System.out.println("directoryAssignments.getFileName():\"" + directoryAssignments.getFileName() + "\"");
-                System.out.println("folderName: " + "\"" + folderName + "\"");
+//                System.out.println("directoryAssignments.getFileName():\"" + directoryAssignments.getFileName() + "\"");
+//                System.out.println("folderName: " + "\"" + folderName + "\"");
                 int lastIndexHyphen = folderName.lastIndexOf("-");
                 int firstLetterInName = 0;
                 Pattern p = Pattern.compile("\\p{L}");
@@ -47,10 +50,20 @@ public class PictureLoader {
                 }
                 String nameStudent = folderName.substring(firstLetterInName, lastIndexHyphen).trim();
 
+                String date = folderName.substring(lastIndexHyphen+1).trim();
+                date = date.replace("Oct", "oct.");
+                if (date.indexOf(",") == 6){
+                    date = "oct. 0"+date.substring(5);
+                }
+//                System.out.println("date: " + date);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH_mm").withLocale(Locale.FRENCH);
+                LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+
                 Student student = new Student();
                 student.setFullName(nameStudent);
                 Assignment assignment = new Assignment();
                 assignment.setStudent(student);
+                assignment.setDatetime(dateTime);
 
                 for (File file : folder.toFile().listFiles()) {
                     Path pathNIO = Paths.get(file.toURI());
@@ -65,8 +78,19 @@ public class PictureLoader {
                         Logger.getLogger(PictureLoader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                assignments.add(assignment);
+                
+                //if a student already submitted an assignment, take into account the latest version only
+                if (assignments.contains(assignment)) {
+                    int index = assignments.indexOf(assignment);
+                    Assignment prev = assignments.get(index);
+                    if (prev.getDatetime().isBefore(dateTime)) {
+                        assignments.remove(prev);
+                        assignments.add(assignment);
+                    }
 
+                } else {
+                    assignments.add(assignment);
+                }
             }
         });
         return assignments;
