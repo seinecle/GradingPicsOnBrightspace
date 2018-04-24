@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EventsHandling;
+package net.clementlevallois.gradingpics.eventshandling;
 
-import IO.Excel;
+import net.clementlevallois.gradingpics.io.Excel;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

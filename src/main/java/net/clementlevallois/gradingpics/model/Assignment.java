@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model;
+package net.clementlevallois.gradingpics.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

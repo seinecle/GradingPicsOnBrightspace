@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.clementlevallois;
+package net.clementlevallois.gradingpics.controller;
 
-import EventsHandling.PassOrFailEvent;
-import IO.Excel;
-import Model.Assignment;
+import net.clementlevallois.gradingpics.io.Excel;
+import net.clementlevallois.gradingpics.model.Assignment;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -21,7 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -38,34 +35,60 @@ public class ControllerScene1 {
     TilePane tileButtons;
     TilePane buttonsPlusStudentName;
     Label label;
-    Button passButton;
+    Button button14;
+    Button button16;
     Button failButton;
+    Button button18;
 
     public Scene buildScene1(List<Assignment> assignments, int sceneMaxHeight, int sceneWidthMax, Stage stage) {
 
-        assignment = getNextAssignment(assignments);
+        assignment = getNextAssignment(assignments, stage);
+        if (assignment == null) {
+            new MainApp().stop();
+        }
 
         //stackpane: the thing that manages layers on the screen.
         StackPane stackPane = new StackPane();
 
         label = setupLabel();
 
-        //TilePanes guarantee the alignment of objects on screen
+        //TilePanes guarantees the alignment of objects on screen
         tileImages = setupTilePics(sceneMaxHeight, sceneWidthMax);
 
-        //we add 2 buttons to mark the assignment.
-        passButton = new Button();
-        passButton.setMinHeight(30);
-        passButton.setMaxHeight(30);
-        passButton.setMinWidth(80);
-        passButton.setMaxWidth(80);
-        passButton.setText("PASS");
-        passButton.setOnAction(event -> {
+        //we add 3 buttons to mark the assignment.
+        button14 = new Button();
+        button14.setMinHeight(30);
+        button14.setMaxHeight(30);
+        button14.setMinWidth(80);
+        button14.setMaxWidth(80);
+        button14.setText("14");
+        button14.setOnAction(event -> {
             try {
                 Excel excel = new Excel();
-                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "PASS");
+                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "14");
                 Scene scene = new ControllerScene1().buildScene1(assignments, sceneMaxHeight, sceneWidthMax, stage);
                 stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+            } catch (IOException ex) {
+                Logger.getLogger(ControllerScene1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
+
+        button16 = new Button();
+        button16.setMinHeight(30);
+        button16.setMaxHeight(30);
+        button16.setMinWidth(80);
+        button16.setMaxWidth(80);
+        button16.setText("16");
+        button16.setOnAction(event -> {
+            try {
+                Excel excel = new Excel();
+                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "16");
+                Scene scene = new ControllerScene1().buildScene1(assignments, sceneMaxHeight, sceneWidthMax, stage);
+                stage.setScene(scene);
+                stage.setMaximized(true);
                 stage.show();
             } catch (IOException ex) {
                 Logger.getLogger(ControllerScene1.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,15 +104,36 @@ public class ControllerScene1 {
         failButton.setOnAction(event -> {
             try {
                 Excel excel = new Excel();
-                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "FAIL");
+                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "08");
                 Scene scene = new ControllerScene1().buildScene1(assignments, sceneMaxHeight, sceneWidthMax, stage);
                 stage.setScene(scene);
+                stage.setMaximized(true);
                 stage.show();
             } catch (IOException ex) {
                 Logger.getLogger(ControllerScene1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         );
+        button18 = new Button();
+        button18.setMinHeight(30);
+        button18.setMaxHeight(30);
+        button18.setMinWidth(80);
+        button18.setMaxWidth(80);
+        button18.setText("18");
+        button18.setOnAction(event -> {
+            try {
+                Excel excel = new Excel();
+                excel.writeFGradeForOneStudent(assignment.getStudent().getFullName(), "18");
+                Scene scene = new ControllerScene1().buildScene1(assignments, sceneMaxHeight, sceneWidthMax, stage);
+                stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+            } catch (IOException ex) {
+                Logger.getLogger(ControllerScene1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        );
+
         tileButtons = setupTileButtons();
         buttonsPlusStudentName = setupTilesButtonsAndName();
 
@@ -97,7 +141,7 @@ public class ControllerScene1 {
         stackPane.getChildren().add(buttonsPlusStudentName);
 
         //we build the scene.
-        Scene scene = new Scene(stackPane, totalImageWidth, sceneMaxHeight);
+        Scene scene = new Scene(stackPane, sceneWidthMax, sceneMaxHeight);
 
         scene.getStylesheets().add("/styles/Styles.css");
 
@@ -106,8 +150,14 @@ public class ControllerScene1 {
         return scene;
     }
 
-    private Assignment getNextAssignment(List<Assignment> assignments) {
-        return assignments.remove(0);
+    private Assignment getNextAssignment(List<Assignment> assignments, Stage stage) {
+        if (assignments.size() > 0) {
+            return assignments.remove(0);
+        } else {
+            stage.close();
+            new MainApp().stop();
+            return null;
+        }
     }
 
     private TilePane setupTilePics(int sceneMaxHeight, int sceneWidthMax) {
@@ -151,13 +201,13 @@ public class ControllerScene1 {
     }
 
     private TilePane setupTileButtons() {
-        //we put the 2 buttons in a TilePane, to make sure they are aligned horizontally. The TilePane itself will be visible at the bottom center of the app.
+        //we put the buttons in a TilePane, to make sure they are aligned horizontally. The TilePane itself will be visible at the bottom center of the app.
         TilePane tileButtons = new TilePane(Orientation.HORIZONTAL);
 
         tileButtons.setPadding(new Insets(5, 10, 5, 0));
         tileButtons.setHgap(10.0);
         tileButtons.setVgap(0.0);
-        tileButtons.getChildren().addAll(passButton, failButton);
+        tileButtons.getChildren().addAll(button14, failButton, button16, button18);
         tileButtons.setAlignment(Pos.BOTTOM_CENTER);
 
         return tileButtons;
